@@ -79,7 +79,7 @@ export function Footer() {
           {/* Navigation + adresse */}
           <nav aria-labelledby="footer-nav">
             <h2 id="footer-nav" className="text-sm font-semibold text-ink">
-              Le magasin
+              À propos
             </h2>
             <ul className="mt-4 flex flex-col gap-2.5 text-sm">
               {NAV_LINKS.map((link) => (

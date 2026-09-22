@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/config/site";
-import { categoryHref } from "@/features/catalog/catalog.queries";
 import { CartButton } from "@/components/cart/CartButton";
 import { ThemeToggle } from "./ThemeToggle";
 import { MenuIcon, CloseIcon, PhoneIcon } from "./icons";
@@ -12,10 +11,9 @@ import { MenuIcon, CloseIcon, PhoneIcon } from "./icons";
 // Liens absolus ("/#magasin" et non "#magasin") : la navbar est aussi
 // affichée sur /produits et /panier, où ces sections n'existent pas.
 const LINKS = [
+  { href: "/", label: "Accueil" },
   { href: "/produits", label: "Catalogue" },
-  { href: categoryHref("plafonniers"), label: "Plafonniers" },
-  { href: categoryHref("appliques"), label: "Appliques" },
-  { href: "/#magasin", label: "Le magasin" },
+  { href: "/#magasin", label: "À propos" },
   { href: "/#contact", label: "Contact" },
 ];
 
