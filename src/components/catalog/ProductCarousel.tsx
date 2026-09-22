@@ -128,7 +128,7 @@ export function ProductCarousel({
     >
       <div
         ref={trackRef}
-        className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto md:gap-4"
+        className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto md:gap-2"
       >
         {slides.map((slide, index) => (
           <div

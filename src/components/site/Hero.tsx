@@ -5,18 +5,23 @@ import { BoltShape } from "./icons";
 
 export function Hero() {
   return (
-    <section id="accueil" className="relative overflow-hidden border-b border-line">
+    <section
+      id="accueil"
+      className="relative background overflow-hidden border-b border-line"
+    >
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-10 md:grid-cols-2 md:items-center md:py-16">
         <div>
           <p className="text-sm text-orange-ink">
             {SITE.tagline} · {SITE.city}
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold leading-[1.08] tracking-tight md:text-5xl">
-            Tout le matériel électrique et l&apos;éclairage de votre maison, au même endroit.
+            Tout le matériel électrique et l&apos;éclairage de votre maison, au
+            même endroit.
           </h1>
           <p className="mt-5 max-w-md text-ink-soft">
-            Plafonniers LED, appliques murales, câblage et domotique : {SITE.fullName} équipe les maisons d&apos;Alger
-            avec du matériel en stock et des prix affichés en magasin.
+            Plafonniers LED, appliques murales, câblage et domotique :{" "}
+            {SITE.fullName} équipe les maisons d&apos;Alger avec du matériel en
+            stock et des prix affichés en magasin.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link

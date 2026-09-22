@@ -170,7 +170,7 @@ export function CatalogView({ products }: { products: Product[] }) {
             </button>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {results.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

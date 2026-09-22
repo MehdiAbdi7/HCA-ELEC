@@ -44,7 +44,9 @@ const themeInitScript = `
 })();
 `;
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="fr"
@@ -56,11 +58,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="flex min-h-full flex-col overflow-x-clip font-sans background text-ink">
+      <body className="flex min-h-full flex-col overflow-x-clip font-sans text-ink">
         <Providers>
           {/* Navbar et Footer communs à toutes les pages. */}
           <Navbar />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 background">{children}</div>
           <Footer />
         </Providers>
       </body>

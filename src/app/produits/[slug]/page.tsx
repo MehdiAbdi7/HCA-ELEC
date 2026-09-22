@@ -28,12 +28,15 @@ export function generateStaticParams() {
   return getAllProducts().map((product) => ({ slug: product.slug }));
 }
 
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProductPageProps): Promise<Metadata> {
   const product = getProductBySlug((await params).slug);
   if (!product) return {};
   return {
     title: product.name,
-    description: `${product.name} — ${product.spec}. ${product.description}`.slice(0, 160),
+    description:
+      `${product.name} — ${product.spec}. ${product.description}`.slice(0, 160),
     openGraph: { images: [product.image] },
   };
 }
@@ -54,12 +57,20 @@ export default async function ProductPage({ params }: ProductPageProps) {
     description: product.description,
     image: product.image,
     brand: { "@type": "Brand", name: SITE.name },
-    offers: { "@type": "Offer", price: product.price, priceCurrency: "DZD", availability: "https://schema.org/InStock" },
+    offers: {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: "DZD",
+      availability: "https://schema.org/InStock",
+    },
   };
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-8 md:py-12">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <main className="mx-auto max-w-7xl px-5 py-8 background md:py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <Breadcrumb
         items={[
@@ -87,13 +98,24 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <div>
-          <p className="text-sm text-orange-ink">{collection?.title ?? category.label}</p>
-          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
+          <p className="text-sm text-orange-ink">
+            {collection?.title ?? category.label}
+          </p>
+          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+            {product.name}
+          </h1>
           <p className="mt-2 text-ink-soft">{product.spec}</p>
 
-          <PriceTag price={product.price} oldPrice={product.oldPrice} size="lg" className="mt-6" />
+          <PriceTag
+            price={product.price}
+            oldPrice={product.oldPrice}
+            size="lg"
+            className="mt-6"
+          />
 
-          <p className="mt-6 leading-relaxed text-ink-soft">{product.description}</p>
+          <p className="mt-6 leading-relaxed text-ink-soft">
+            {product.description}
+          </p>
 
           <ul className="mt-6 flex flex-col gap-2 text-sm">
             {product.features.map((feature) => (
@@ -104,16 +126,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
             ))}
           </ul>
 
-          <AddToCartButton productId={product.id} productName={product.name} className="mt-8 w-full sm:w-auto" />
+          <AddToCartButton
+            productId={product.id}
+            productName={product.name}
+            className="mt-8 w-full sm:w-auto"
+          />
 
           {/* Cible du bouton "Acheter" des cartes produit (#commander).
               scroll-mt : la navbar sticky ne masque pas le titre. */}
-          <section id="commander" aria-labelledby="order-title" className="mt-12 scroll-mt-24 border-t border-line pt-8">
-            <h2 id="order-title" className="font-display text-2xl font-semibold tracking-tight">
+          <section
+            id="commander"
+            aria-labelledby="order-title"
+            className="mt-12 scroll-mt-24 border-t border-line pt-8"
+          >
+            <h2
+              id="order-title"
+              className="font-display text-2xl font-semibold tracking-tight"
+            >
               Commander ce produit
             </h2>
             <p className="mt-2 text-sm text-ink-soft">
-              Plusieurs produits à commander ? Ajoutez-les au panier et commandez tout en une fois.
+              Plusieurs produits à commander ? Ajoutez-les au panier et
+              commandez tout en une fois.
             </p>
             <div className="mt-6">
               <ProductOrderForm product={product} />
@@ -123,9 +157,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {related.length > 0 && (
-        <section aria-labelledby="related-title" className="mt-20 border-t border-line pt-12">
-          <h2 id="related-title" className="font-display text-2xl font-semibold tracking-tight">
-            {collection ? "Dans la même gamme" : `Autres ${category.shortLabel.toLowerCase()}`}
+        <section
+          aria-labelledby="related-title"
+          className="mt-20 border-t border-line pt-12"
+        >
+          <h2
+            id="related-title"
+            className="font-display text-2xl font-semibold tracking-tight"
+          >
+            {collection
+              ? "Dans la même gamme"
+              : `Autres ${category.shortLabel.toLowerCase()}`}
           </h2>
           <ProductCarousel label="Produits similaires" className="mt-8">
             {related.map((p) => (

@@ -93,7 +93,6 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   /* "fixed" est mal géré sur mobile : activé seulement à partir de 768px. */
-  background-attachment: scroll;
 }
 
 @media (min-width: 768px) {
