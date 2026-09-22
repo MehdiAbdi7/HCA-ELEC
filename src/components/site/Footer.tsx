@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { SITE } from "@/data/lighting";
+import { SITE } from "@/config/site";
 
 export function Footer() {
   return (
-    <footer className="py-10">
+    <footer className="border-t border-line py-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 text-sm text-ink-soft sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <Image
@@ -17,7 +17,9 @@ export function Footer() {
             {SITE.name} — {SITE.fullName}
           </span>
         </div>
-        <p>© {new Date().getFullYear()} {SITE.fullName}. Tous droits réservés.</p>
+        <p>
+          © {new Date().getFullYear()} {SITE.fullName}. Tous droits réservés.
+        </p>
       </div>
     </footer>
   );

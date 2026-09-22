@@ -1,25 +1,22 @@
-import { Navbar } from "@/components/site/Navbar";
 import { Hero } from "@/components/site/Hero";
 import { TrustStrip } from "@/components/site/TrustStrip";
-import { PlafonniersSection } from "@/components/site/PlafonniersSection";
-import { AppliquesSection } from "@/components/site/AppliquesSection";
 import { AboutSection } from "@/components/site/AboutSection";
 import { Contact } from "@/components/site/Contact";
-import { Footer } from "@/components/site/Footer";
+import { CategoryShowcase } from "@/components/catalog/CategoryShowcase";
+import { CATEGORY_IDS } from "@/features/catalog/catalog.types";
 
-export default function Page() {
+export default function HomePage() {
   return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <TrustStrip />
-        <PlafonniersSection />
-        <AppliquesSection />
-        <AboutSection />
-      </main>
+    <main>
+      <Hero />
+      <TrustStrip />
+      {/* Une section carrousel par catégorie : une nouvelle catégorie
+          ajoutée au catalogue apparaît ici automatiquement. */}
+      {CATEGORY_IDS.map((categoryId) => (
+        <CategoryShowcase key={categoryId} categoryId={categoryId} />
+      ))}
+      <AboutSection />
       <Contact />
-      <Footer />
-    </>
+    </main>
   );
 }

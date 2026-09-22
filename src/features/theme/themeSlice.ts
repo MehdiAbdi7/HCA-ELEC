@@ -14,14 +14,12 @@ function getInitialMode(): ThemeMode {
       return stored;
     }
   } catch {
-    // localStorage indisponible → on retombe sur "system"
+    // localStorage indisponible
   }
   return "system";
 }
 
-const initialState: ThemeState = {
-  mode: getInitialMode(),
-};
+const initialState: ThemeState = { mode: getInitialMode() };
 
 const themeSlice = createSlice({
   name: "theme",

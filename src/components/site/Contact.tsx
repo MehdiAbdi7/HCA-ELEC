@@ -1,9 +1,12 @@
-import { SITE } from "@/data/lighting";
+import { SITE } from "@/config/site";
 import { PhoneIcon, WhatsappIcon } from "./icons";
 
 export function Contact() {
   return (
-    <section id="contact" className="bg-line py-16 text-ink md:py-20">
+    <section
+      id="contact"
+      className="scroll-mt-16 bg-line py-16 text-ink md:py-20"
+    >
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
@@ -14,7 +17,7 @@ export function Contact() {
         <div className="flex flex-wrap gap-3">
           <a
             href={SITE.phoneHref}
-            className="flex items-center gap-2 bg-ink-soft px-6 py-3 text-sm font-medium text-orange-ink transition-opacity hover:opacity-90"
+            className="flex items-center gap-2 bg-orange px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             <PhoneIcon className="h-4 w-4" />
             {SITE.phoneDisplay}

@@ -48,6 +48,14 @@
   --font-sans: var(--font-inter);
 }
 
+/* Cache la barre de défilement (carrousels) sans désactiver le scroll. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--ink);
@@ -56,6 +64,12 @@ body {
 ::selection {
   background: var(--orange);
   color: #0b0c0e;
+}
+
+/* Focus clavier visible partout, aux couleurs de la marque. */
+:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
 }
 
 /* Encoche angulaire : référence discrète à l'éclair du logo,
@@ -72,18 +86,13 @@ body {
 }
 
 .background {
-  /* Le gradient uni (répété deux fois pour rester "plat") sert de voile :
-     il assombrit légèrement l'image pour que le texte reste lisible,
-     sans la masquer complètement. */
   background-image:
     linear-gradient(rgba(245, 247, 251, 0.78), rgba(245, 247, 251, 0.78)),
     url("/images/bg-white.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* "fixed" est mal géré sur mobile (iOS Safari l'ignore/le casse, Android
-     rame dessus) : on ne l'active qu'à partir de 768px, sur mobile le fond
-     défile normalement avec la page. */
+  /* "fixed" est mal géré sur mobile : activé seulement à partir de 768px. */
   background-attachment: scroll;
 }
 
