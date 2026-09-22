@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/* Active le mode sombre piloté par une classe .dark sur <html>
+   (posée par le script inline dans layout.tsx + par useTheme),
+   plutôt que par la seule préférence système. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Thème clair — bleu électrique + orange (logo fond bleu) */
+  --bg: #f5f7fb;
+  --surface: #e2eaff;
+  --surface-2: #eaeff7;
+  --ink: #10141c;
+  --ink-soft: #2050a9;
+  --line: #dce3ee;
+  --blue: #1949e0;
+  --blue-ink: #0f2e86;
+  --orange: #f5820a;
+  --orange-ink: #c9660a;
+}
+
+.dark {
+  /* Thème sombre — noir + orange (logo fond noir) */
+  --bg: #0b0c0e;
+  --surface: #080f2d;
+  --surface-2: #0d1d3f;
+  --ink: #f3f4f1;
+  --ink-soft: #c67825;
+  --line: #08205c;
+  --blue: #4c7cff;
+  --blue-ink: #a9c1ff;
+  --orange: #f5820a;
+  --orange-ink: #ffb35c;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-blue: var(--blue);
+  --color-blue-ink: var(--blue-ink);
+  --color-orange: var(--orange);
+  --color-orange-ink: var(--orange-ink);
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--orange);
+  color: #0b0c0e;
+}
+
+/* Encoche angulaire : référence discrète à l'éclair du logo,
+   utilisée sur les cartes produits au lieu de coins arrondis génériques. */
+.notch {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 18px) 0,
+    100% 18px,
+    100% 100%,
+    18px 100%,
+    0 calc(100% - 18px)
+  );
+}
+
+.background {
+  /* Le gradient uni (répété deux fois pour rester "plat") sert de voile :
+     il assombrit légèrement l'image pour que le texte reste lisible,
+     sans la masquer complètement. */
+  background-image:
+    linear-gradient(rgba(245, 247, 251, 0.78), rgba(245, 247, 251, 0.78)),
+    url("/images/bg-white.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* "fixed" est mal géré sur mobile (iOS Safari l'ignore/le casse, Android
+     rame dessus) : on ne l'active qu'à partir de 768px, sur mobile le fond
+     défile normalement avec la page. */
+  background-attachment: scroll;
+}
+
+@media (min-width: 768px) {
+  .background {
+    background-attachment: fixed;
+  }
+}
+
+.dark .background {
+  background-image:
+    linear-gradient(rgba(11, 12, 14, 0.6), rgba(11, 12, 14, 0.6)),
+    url("/images/bg-dark.jpg");
+}
