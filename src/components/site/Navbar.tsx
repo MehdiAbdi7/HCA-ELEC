@@ -28,11 +28,11 @@ export function Navbar() {
           <Image
             src="/images/brand/logo-navbar.png"
             alt="Home Connect Algérie"
-            width={46}
-            height={46}
-            className=" object-contain"
+            width={112}
+            height={112}
+            className="h-18 w-18 object-contain"
           />
-          <span className="font-display text-base/70 font-semibold tracking-tight">
+          <span className="font-display text-base font-semibold tracking-tight sm:inline">
             {SITE.name}
           </span>
         </Link>
