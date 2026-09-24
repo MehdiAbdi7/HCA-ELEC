@@ -25,7 +25,7 @@ export function CategoryShowcase({ categoryId }: { categoryId: CategoryId }) {
         (px-5 / md:px-8) laisse aussi la place aux flèches, positionnées à
         -20px du rail, pour rester DANS le cadre.
       */}
-      <div className=" mx-auto max-w-7xl border border-white/40 rounded-2xl background px-5 py-8 md:px-8 md:py-10">
+      <div className=" mx-auto max-w-7xl border-2 border-surface-2 rounded-2xl bg-surface-2/20 backdrop-blur-2xl shadow-2xl shadow-surface-2 px-5 py-8 md:px-8 md:py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-lg">
             <h2 className="font-display text-3xl font-semibold tracking-tight">
