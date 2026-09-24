@@ -26,7 +26,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5">
         <Link
           href="/"
-          className="flex items-center justify-center gap-2.5"
+          className="flex items-center justify-center gap-1"
           onClick={close}
         >
           <Image
@@ -34,7 +34,7 @@ export function Navbar() {
             alt="Home Connect Algérie"
             width={50}
             height={50}
-            className="h-10 w-10 object-contain"
+            className="h-14 w-14 object-contain"
           />
           <span className="font-display text-base font-semibold tracking-tight sm:inline">
             {SITE.name}
