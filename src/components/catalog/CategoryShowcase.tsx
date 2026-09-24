@@ -18,7 +18,10 @@ export function CategoryShowcase({ categoryId }: { categoryId: CategoryId }) {
   if (products.length === 0) return null;
 
   return (
-    <section id={category.id} className="scroll-mt-20 px-5 py-10 md:py-14">
+    <section
+      id={category.id}
+      className="scroll-mt-20 px-2 md:px-5 py-10 md:py-14"
+    >
       {/*
         Chaque catégorie est un bloc encadré : la bordure orange isole
         visuellement le carrousel du reste de la page. Le padding intérieur

@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import type { Product } from "@/features/catalog/catalog.types";
 import {
   DEFAULT_FILTERS,
@@ -24,11 +30,37 @@ const DESKTOP_QUERY = "(min-width: 1024px)";
 const productsLabel = (count: number) =>
   `${count} produit${count > 1 ? "s" : ""}`;
 
+const subscribeToDesktop = (onChange: () => void) => {
+  const query = window.matchMedia(DESKTOP_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+
+/**
+ * Vrai à partir de lg. Le CSS suffit pour l'apparence ; ce hook sert au
+ * comportement : desktop = filtrage immédiat, mobile = brouillon + "Appliquer".
+ * Snapshot serveur à `false` (export statique) → premier rendu identique
+ * côté serveur et client, puis React réévalue.
+ */
+function useIsDesktop() {
+  return useSyncExternalStore(
+    subscribeToDesktop,
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false,
+  );
+}
+
 export function CatalogView({ products }: { products: Product[] }) {
   const { filters, applyFilters, setFilters, resetFilters, activeCount } =
     useCatalogFilters();
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [drawerRequested, setDrawerRequested] = useState(false);
+  const isDesktop = useIsDesktop();
   const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Le tiroir n'existe qu'en mobile : on dérive son état au lieu de le
+  // synchroniser dans un effet (rendus en cascade). Si la fenêtre s'élargit
+  // alors qu'il est ouvert, il redevient simplement la sidebar.
+  const drawerOpen = drawerRequested && !isDesktop;
 
   const results = useMemo(
     () => applyCatalogFilters(products, filters),
@@ -36,10 +68,13 @@ export function CatalogView({ products }: { products: Product[] }) {
   );
 
   /**
-   * Identité des filtres APPLIQUÉS, hors tri. Sert de `key` au panneau :
-   * dès que les filtres appliqués changent (Appliquer, réinitialisation,
-   * bouton retour du navigateur), le panneau repart de ces valeurs.
+   * Identité des filtres APPLIQUÉS, hors tri. Sert de `key` au panneau en
+   * mobile : dès que les filtres appliqués changent (Appliquer, réinitialisation,
+   * bouton retour du navigateur), le brouillon repart de ces valeurs.
    * Le tri est exclu : le changer ne doit pas effacer une sélection en cours.
+   * En desktop la clé est fixe : le panneau lit directement les filtres
+   * appliqués, donc il n'a rien à resynchroniser — et le remonter à chaque
+   * frappe ferait perdre le focus du champ de recherche.
    */
   const appliedKey = useMemo(
     () => toSearchParams({ ...filters, tri: DEFAULT_FILTERS.tri }).toString(),
@@ -61,10 +96,10 @@ export function CatalogView({ products }: { products: Product[] }) {
     if (window.scrollY > top) window.scrollTo({ top, behavior: "smooth" });
   };
 
-  const handleApply = (draft: Filters) => {
+  const handleApply = (next: Filters) => {
     // Le tri vient de la barre du haut, pas du panneau : on garde celui en cours.
-    applyFilters({ ...draft, tri: filters.tri });
-    setFiltersOpen(false);
+    applyFilters({ ...next, tri: filters.tri });
+    setDrawerRequested(false);
     scrollToResultsIfNeeded();
   };
 
@@ -81,27 +116,28 @@ export function CatalogView({ products }: { products: Product[] }) {
   // Tiroir mobile ouvert : on bloque le scroll de la page derrière et
   // la touche Échap le ferme. (Rien à faire sur desktop : c'est une sidebar.)
   useEffect(() => {
-    if (!filtersOpen || window.matchMedia(DESKTOP_QUERY).matches) return;
+    if (!drawerOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setFiltersOpen(false);
+      if (event.key === "Escape") setDrawerRequested(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [filtersOpen]);
+  }, [drawerOpen]);
 
   return (
     <div className="mt-8 grid gap-8 lg:grid-cols-[230px_1fr] lg:gap-12">
       <FiltersPanel
-        key={appliedKey}
+        key={isDesktop ? "sidebar" : appliedKey}
         products={products}
         appliedFilters={filters}
-        open={filtersOpen}
-        onClose={() => setFiltersOpen(false)}
+        isDesktop={isDesktop}
+        open={drawerOpen}
+        onClose={() => setDrawerRequested(false)}
         onApply={handleApply}
       />
 
@@ -114,8 +150,8 @@ export function CatalogView({ products }: { products: Product[] }) {
         <div className="sticky top-16 z-30 -mx-5 flex items-center gap-3 border-b border-line bg-bg/95 px-5 py-3 backdrop-blur lg:mx-0">
           <button
             type="button"
-            onClick={() => setFiltersOpen(true)}
-            aria-expanded={filtersOpen}
+            onClick={() => setDrawerRequested(true)}
+            aria-expanded={drawerOpen}
             aria-controls="catalog-filters"
             className="flex h-9 shrink-0 items-center gap-2 border border-line px-3 text-sm font-medium transition-colors hover:border-orange lg:hidden"
           >
@@ -185,68 +221,128 @@ export function CatalogView({ products }: { products: Product[] }) {
 
 type FiltersPanelProps = {
   products: Product[];
-  /** Filtres actuellement appliqués (= ceux de l'URL), point de départ du brouillon. */
+  /** Filtres actuellement appliqués (= ceux de l'URL). */
   appliedFilters: Filters;
+  /** À partir de lg : sidebar sticky + filtrage immédiat au lieu du tiroir. */
+  isDesktop: boolean;
   open: boolean;
   onClose: () => void;
-  onApply: (draft: Filters) => void;
+  onApply: (next: Filters) => void;
 };
 
+/** Marge laissée sous la colonne une fois collée. */
+const SIDEBAR_BOTTOM_GAP_PX = 16;
+
 /**
- * Panneau de filtres en mode "brouillon" : les choix du client sont gardés
- * localement et ne modifient la liste qu'au clic sur "Appliquer". Le bouton
- * annonce à l'avance combien de produits seront affichés.
+ * Un composant, deux comportements :
  *
- * Deux affichages, un seul composant :
- *  - mobile  : tiroir plein écran ouvert depuis la barre de tri ;
- *  - desktop : sidebar sticky, liste scrollable et bouton toujours visible en bas.
+ *  - desktop : sidebar sticky, les résultats sont visibles à côté des filtres,
+ *    donc chaque changement s'applique immédiatement. Pas de bouton, donc plus
+ *    de bouton hors écran tant que la colonne n'est pas collée.
+ *  - mobile : tiroir plein écran. Les résultats sont masqués pendant la
+ *    sélection, d'où le brouillon local validé par "Appliquer", qui annonce à
+ *    l'avance combien de produits seront affichés.
  */
 function FiltersPanel({
   products,
   appliedFilters,
+  isDesktop,
   open,
   onClose,
   onApply,
 }: FiltersPanelProps) {
   const [draft, setDraft] = useState<Filters>(appliedFilters);
   const [searchKey, setSearchKey] = useState(0);
+  const asideRef = useRef<HTMLElement>(null);
+
+  const instantApply = isDesktop;
+
+  /**
+   * Hauteur disponible réelle de la colonne.
+   *
+   * `max-h-[calc(100dvh-…)]` ne suffit pas : il suppose que la colonne
+   * commence en haut de la fenêtre. Tant qu'elle n'est pas collée, elle est à
+   * sa position naturelle (sous le titre de page), donc elle dépasse d'autant
+   * par le bas — et ce qui dépasse est hors écran, inatteignable au scroll
+   * interne. On mesure donc sa distance au haut de la fenêtre et on en déduit
+   * la hauteur restante.
+   *
+   * Écriture directe dans le style : c'est une mesure de mise en page, pas un
+   * état applicatif. Passer par useState déclencherait un rendu par frame de
+   * scroll pour rien.
+   */
+  useEffect(() => {
+    const aside = asideRef.current;
+    if (!aside || !isDesktop) return;
+
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const { top } = aside.getBoundingClientRect();
+      const available =
+        window.innerHeight - Math.max(top, 0) - SIDEBAR_BOTTOM_GAP_PX;
+      aside.style.maxHeight = `${Math.max(available, 200)}px`;
+    };
+    // Une seule mesure par frame : getBoundingClientRect force un recalcul
+    // de mise en page, à ne pas déclencher à chaque événement de scroll.
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      aside.style.maxHeight = "";
+    };
+  }, [isDesktop]);
+
+  // En desktop, la source de vérité reste l'URL : rien à synchroniser, et le
+  // bouton retour du navigateur remet les cases dans le bon état tout seul.
+  const values = instantApply ? appliedFilters : draft;
+
+  const commit = (next: Filters) =>
+    instantApply ? onApply(next) : setDraft(next);
 
   const previewCount = useMemo(
-    () => applyCatalogFilters(products, draft).length,
-    [products, draft],
+    () => applyCatalogFilters(products, values).length,
+    [products, values],
   );
 
   // Comparaison par l'URL qu'ils produiraient : plus simple et plus sûr
   // qu'un champ-à-champ à maintenir quand un filtre sera ajouté.
   const hasChanges = useMemo(
     () =>
-      toSearchParams(draft).toString() !==
+      toSearchParams(values).toString() !==
       toSearchParams(appliedFilters).toString(),
-    [draft, appliedFilters],
+    [values, appliedFilters],
   );
 
-  const updateDraft = (patch: Partial<Filters>) =>
-    setDraft((previous) => {
-      const next = { ...previous, ...patch };
-      // Une gamme appartient à une catégorie : changer de catégorie la réinitialise.
-      if ("categorie" in patch && patch.categorie !== previous.categorie) {
-        next.collection = undefined;
-      }
-      return next;
-    });
+  const updateValues = (patch: Partial<Filters>) => {
+    const next = { ...values, ...patch };
+    // Une gamme appartient à une catégorie : changer de catégorie la réinitialise.
+    if ("categorie" in patch && patch.categorie !== values.categorie) {
+      next.collection = undefined;
+    }
+    commit(next);
+  };
 
-  const resetDraft = () => {
-    setDraft({ ...DEFAULT_FILTERS, tri: draft.tri });
+  const resetValues = () => {
+    commit({ ...DEFAULT_FILTERS, tri: values.tri });
     setSearchKey((key) => key + 1); // remonte le champ de recherche vide
   };
 
   return (
     <aside
+      ref={asideRef}
       id="catalog-filters"
       role={open ? "dialog" : undefined}
       aria-modal={open || undefined}
       aria-label="Filtres du catalogue"
-      className={`${open ? "fixed inset-0 z-60 flex" : "hidden"} flex-col bg-bg lg:sticky lg:inset-auto lg:top-24 lg:z-auto lg:flex lg:max-h-[calc(100dvh-7rem)] lg:self-start lg:bg-transparent`}
+      className={`${open ? "fixed inset-0 z-60 flex" : "hidden"} flex-col bg-bg lg:sticky lg:inset-auto lg:top-16 lg:z-auto lg:flex lg:max-h-[calc(100dvh-5rem)] lg:self-start lg:bg-transparent`}
     >
       {/* En-tête du tiroir (mobile uniquement) */}
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-5 lg:hidden">
@@ -261,20 +357,26 @@ function FiltersPanel({
         </button>
       </div>
 
-      {/* min-h-0 : indispensable pour que le scroll interne s'active dans un conteneur flex. */}
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 [scrollbar-color:var(--line)_transparent] scrollbar-thin lg:px-0 lg:py-0 lg:pr-3">
+      {/*
+        min-h-0 : indispensable pour que le scroll interne s'active dans un conteneur flex.
+        overscroll-contain est réservé au tiroir mobile (la page ne doit pas défiler
+        derrière). En desktop il doit être désactivé : sinon la molette est absorbée
+        par cette zone, la page ne descend jamais, et la colonne n'atteint jamais son
+        point de collage — son bas reste hors écran en permanence.
+      */}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-6 [scrollbar-color:var(--line)_transparent] scrollbar-thin lg:overscroll-auto lg:px-0 lg:py-0 lg:pr-3 lg:pb-6">
         <CatalogFilters
           products={products}
-          filters={draft}
-          onChange={updateDraft}
-          onReset={resetDraft}
-          activeCount={countActiveFilters(draft)}
+          filters={values}
+          onChange={updateValues}
+          onReset={resetValues}
+          activeCount={countActiveFilters(values)}
           searchKey={searchKey}
         />
       </div>
 
-      {/* Bouton d'application, toujours visible (hors zone scrollable). */}
-      <div className="shrink-0 border-t border-line p-5 lg:px-0 lg:pb-0 lg:pt-5">
+      {/* Validation du brouillon : mobile seulement (desktop filtre à la volée). */}
+      <div className="shrink-0 border-t border-line p-5 lg:hidden">
         <button
           type="button"
           onClick={() => onApply(draft)}
@@ -288,7 +390,7 @@ function FiltersPanel({
         <button
           type="button"
           onClick={onClose}
-          className="mt-3 w-full border border-line py-2.5 text-sm font-medium transition-colors hover:border-orange lg:hidden"
+          className="mt-3 w-full border border-line py-2.5 text-sm font-medium transition-colors hover:border-orange"
         >
           Fermer
         </button>
@@ -304,8 +406,8 @@ export function CatalogSkeleton() {
       aria-busy="true"
     >
       <div className="hidden h-96 animate-pulse bg-surface-2 lg:block" />
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-        {Array.from({ length: 6 }, (_, i) => (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {Array.from({ length: 8 }, (_, i) => (
           <div
             key={i}
             className="notch aspect-3/4 animate-pulse bg-surface-2"
