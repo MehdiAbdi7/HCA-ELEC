@@ -24,13 +24,17 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5">
-        <Link href="/" className="flex items-center gap-2.5" onClick={close}>
+        <Link
+          href="/"
+          className="flex items-center justify-center gap-2.5"
+          onClick={close}
+        >
           <Image
             src="/images/brand/logo-navbar.png"
             alt="Home Connect Algérie"
-            width={112}
-            height={112}
-            className="h-18 w-18 object-contain"
+            width={50}
+            height={50}
+            className="h-10 w-10 object-contain"
           />
           <span className="font-display text-base font-semibold tracking-tight sm:inline">
             {SITE.name}
