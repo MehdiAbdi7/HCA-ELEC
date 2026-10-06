@@ -85,24 +85,37 @@ body {
   );
 }
 
+/* Fonds en WebP générés au build (scripts/optimize-images.mjs) : les CSS
+   ne passent pas par next/image, on vise donc directement une variante.
+   640 px sur mobile ; au-delà, la variante 1280 (la source fait 768 px,
+   le fichier garde donc sa taille d'origine). */
 .background {
   background-image:
     linear-gradient(rgba(245, 247, 251, 0.78), rgba(245, 247, 251, 0.78)),
-    url("/images/bg-white.jpg");
+    url("/images-opt/bg-white-640.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   /* "fixed" est mal géré sur mobile : activé seulement à partir de 768px. */
 }
 
-@media (min-width: 768px) {
-  .background {
-    background-attachment: fixed;
-  }
-}
-
 .dark .background {
   background-image:
     linear-gradient(rgba(11, 12, 14, 0.6), rgba(11, 12, 14, 0.6)),
-    url("/images/bg-dark.jpg");
+    url("/images-opt/bg-dark-640.webp");
+}
+
+@media (min-width: 768px) {
+  .background {
+    background-attachment: fixed;
+    background-image:
+      linear-gradient(rgba(245, 247, 251, 0.78), rgba(245, 247, 251, 0.78)),
+      url("/images-opt/bg-white-1280.webp");
+  }
+
+  .dark .background {
+    background-image:
+      linear-gradient(rgba(11, 12, 14, 0.6), rgba(11, 12, 14, 0.6)),
+      url("/images-opt/bg-dark-1280.webp");
+  }
 }

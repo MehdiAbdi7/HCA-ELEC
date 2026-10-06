@@ -33,3 +33,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# images générées au build par scripts/optimize-images.mjs
+/public/images-opt/
