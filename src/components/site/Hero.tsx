@@ -26,7 +26,7 @@ export function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/produits"
-              className="bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+              className="bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
             >
               Voir le catalogue
             </Link>
@@ -43,13 +43,20 @@ export function Hero() {
           <BoltShape className="absolute -right-6 -top-10 h-100 w-40 text-orange/15 md:-right-10 md:h-80 md:w-48" />
           {/* Photo source carrée (1080x1080) : le conteneur garde ce ratio. */}
           <div className="notch relative aspect-square overflow-hidden border border-line">
+            {/*
+              Pas de "priority" : l'élément LCP de l'accueil est le fond de la
+              section (préchargé dans layout.tsx), pas cette photo. Chargée tout
+              de suite (eager) mais en priorité basse, elle laisse la bande
+              passante au fond, qui s'affiche ainsi plus tôt.
+            */}
             <Image
               src="/images/shop/exterieur.jpg"
               alt="Devanture du magasin Home Connect Algérie"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
-              priority
+              loading="eager"
+              fetchPriority="low"
             />
           </div>
         </div>

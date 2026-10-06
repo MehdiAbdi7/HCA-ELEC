@@ -17,7 +17,9 @@ export function ProductCard({ product }: { product: Product }) {
           src={product.image}
           alt=""
           fill
-          sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 75vw"
+          // Largeur réelle de la carte : 2 par ligne sur mobile (carrousel et
+          // catalogue), 3 à 4 sur tablette, 4 à 5 sur ordinateur.
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
         <DiscountBadge percent={getDiscountPercent(product.price, product.oldPrice)} className="absolute left-3 top-3" />
@@ -38,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex gap-2">
           <Link
             href={productOrderHref(product)}
-            className="flex h-9 flex-1 items-center justify-center bg-ink text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+            className="flex h-9 flex-1 items-center justify-center bg-ink text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
           >
             Acheter
           </Link>

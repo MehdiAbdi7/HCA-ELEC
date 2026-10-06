@@ -19,7 +19,7 @@ export function CartButton() {
     >
       <CartIcon className="h-4 w-4" />
       {hydrated && count > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange px-1 text-[11px] font-semibold text-white">
+        <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange px-1 text-[11px] font-semibold text-on-orange">
           {count > 99 ? "99+" : count}
         </span>
       )}

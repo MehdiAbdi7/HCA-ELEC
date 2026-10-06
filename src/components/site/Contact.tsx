@@ -17,7 +17,7 @@ export function Contact() {
         <div className="flex flex-wrap gap-3">
           <a
             href={SITE.phoneHref}
-            className="flex items-center gap-2 bg-orange px-6 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+            className="flex items-center gap-2 bg-orange px-6 py-3 text-sm font-medium text-on-orange transition-opacity hover:opacity-90"
           >
             <PhoneIcon className="h-4 w-4" />
             {SITE.phoneDisplay}

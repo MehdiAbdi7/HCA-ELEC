@@ -60,7 +60,7 @@ export function Navbar() {
           <CartButton />
           <a
             href={SITE.phoneHref}
-            className="hidden items-center gap-2 bg-orange px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 lg:flex"
+            className="hidden items-center gap-2 bg-orange px-4 py-2 text-sm font-medium text-on-orange transition-opacity hover:opacity-90 lg:flex"
           >
             <PhoneIcon className="h-4 w-4" />
             {SITE.phoneDisplay}
@@ -103,7 +103,7 @@ export function Navbar() {
             <ThemeToggle />
             <a
               href={SITE.phoneHref}
-              className="flex items-center gap-2 bg-orange px-4 py-2 text-sm font-medium text-white"
+              className="flex items-center gap-2 bg-orange px-4 py-2 text-sm font-medium text-on-orange"
             >
               <PhoneIcon className="h-4 w-4" />
               {SITE.phoneDisplay}
