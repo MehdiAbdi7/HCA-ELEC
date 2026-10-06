@@ -67,7 +67,7 @@ export function CartView() {
         </p>
         <Link
           href="/produits"
-          className="mt-6 inline-block bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+          className="mt-6 inline-block bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
         >
           Voir le catalogue
         </Link>

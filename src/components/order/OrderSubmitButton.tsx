@@ -5,7 +5,7 @@ export function OrderSubmitButton() {
     <div>
       <button
         type="submit"
-        className="flex w-full items-center justify-center gap-2 bg-orange px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        className="flex w-full items-center justify-center gap-2 bg-orange px-6 py-3.5 text-sm font-semibold text-on-orange transition-opacity hover:opacity-90"
       >
         <WhatsappIcon className="h-4 w-4" />
         Envoyer ma commande sur WhatsApp

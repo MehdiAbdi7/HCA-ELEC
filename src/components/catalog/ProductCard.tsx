@@ -40,7 +40,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex gap-2">
           <Link
             href={productOrderHref(product)}
-            className="flex h-9 flex-1 items-center justify-center bg-ink text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+            className="flex h-9 flex-1 items-center justify-center bg-ink text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
           >
             Acheter
           </Link>

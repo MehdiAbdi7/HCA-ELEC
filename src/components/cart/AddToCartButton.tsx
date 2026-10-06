@@ -49,7 +49,7 @@ export function AddToCartButton({ productId, productName, variant = "full", clas
           title={title}
           aria-label={`Ajouter ${productName} au panier`}
           className={`flex h-9 w-9 shrink-0 items-center justify-center border transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-            justAdded ? "border-orange bg-orange text-white" : "border-line text-ink hover:border-orange hover:text-orange"
+            justAdded ? "border-orange bg-orange text-on-orange" : "border-line text-ink hover:border-orange hover:text-orange"
           } ${className}`}
         >
           <Icon className="h-4 w-4" />
@@ -61,7 +61,7 @@ export function AddToCartButton({ productId, productName, variant = "full", clas
           disabled={isMaxed}
           title={title}
           className={`flex h-11 items-center justify-center gap-2 border px-6 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-            justAdded ? "border-orange bg-orange text-white" : "border-ink text-ink hover:border-orange hover:text-orange-ink"
+            justAdded ? "border-orange bg-orange text-on-orange" : "border-ink text-ink hover:border-orange hover:text-orange-ink"
           } ${className}`}
         >
           <Icon className="h-4 w-4" />

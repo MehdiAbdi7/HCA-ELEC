@@ -8,7 +8,7 @@ export default function NotFound() {
       <p className="text-ink-soft">Le produit a peut-être été retiré du catalogue.</p>
       <Link
         href="/produits"
-        className="mt-2 bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+        className="mt-2 bg-ink px-6 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
       >
         Voir le catalogue
       </Link>

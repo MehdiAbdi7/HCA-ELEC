@@ -12,7 +12,7 @@ export function OrderSentPanel({ whatsappUrl, onBack, children }: OrderSentPanel
   return (
     <div role="status" className="notch border border-orange bg-surface p-6">
       <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange text-white">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange text-on-orange">
           <CheckIcon className="h-4 w-4" />
         </span>
         <h3 className="font-display text-lg font-semibold">Commande prête dans WhatsApp</h3>
@@ -26,7 +26,7 @@ export function OrderSentPanel({ whatsappUrl, onBack, children }: OrderSentPanel
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-orange px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="flex items-center gap-2 bg-orange px-5 py-2.5 text-sm font-medium text-on-orange transition-opacity hover:opacity-90"
         >
           <WhatsappIcon className="h-4 w-4" />
           Rouvrir WhatsApp

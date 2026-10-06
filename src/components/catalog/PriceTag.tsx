@@ -27,6 +27,6 @@ export function PriceTag({ price, oldPrice, size = "md", className = "" }: Price
 export function DiscountBadge({ percent, className = "" }: { percent: number | null; className?: string }) {
   if (!percent) return null;
   return (
-    <span className={`bg-orange px-2 py-0.5 text-xs font-semibold text-white ${className}`}>−{percent}%</span>
+    <span className={`bg-orange px-2 py-0.5 text-xs font-semibold text-on-orange ${className}`}>−{percent}%</span>
   );
 }

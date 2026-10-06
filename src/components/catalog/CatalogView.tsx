@@ -158,7 +158,7 @@ export function CatalogView({ products }: { products: Product[] }) {
             <SlidersIcon className="h-4 w-4" />
             Filtrer
             {activeCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-orange px-1 text-[11px] font-semibold text-white">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-orange px-1 text-[11px] font-semibold text-on-orange">
                 {activeCount}
               </span>
             )}
@@ -188,6 +188,10 @@ export function CatalogView({ products }: { products: Product[] }) {
           </label>
         </div>
 
+        {/* Titre pour les lecteurs d'écran : les cartes produit sont des h3,
+            il leur faut un h2 entre elles et le h1 "Catalogue". */}
+        <h2 className="sr-only">Produits</h2>
+
         {results.length === 0 ? (
           <div className="mt-10 border border-dashed border-line px-6 py-14 text-center">
             <p className="font-display text-lg font-semibold">
@@ -200,7 +204,7 @@ export function CatalogView({ products }: { products: Product[] }) {
             <button
               type="button"
               onClick={handleResetAll}
-              className="mt-6 bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-ink"
+              className="mt-6 bg-ink px-5 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90 dark:bg-orange dark:text-on-orange"
             >
               Effacer les filtres
             </button>
@@ -381,7 +385,7 @@ function FiltersPanel({
           type="button"
           onClick={() => onApply(draft)}
           disabled={!hasChanges}
-          className="w-full bg-orange py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full bg-orange py-3 text-sm font-semibold text-on-orange transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {hasChanges
             ? `Appliquer — ${productsLabel(previewCount)}`
