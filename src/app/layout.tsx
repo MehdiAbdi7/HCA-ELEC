@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { SITE } from "@/config/site";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { InactiveBanner } from "@/components/site/InactiveBanner";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -24,6 +25,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
+  robots: { index: false, follow: false },
   title: {
     default: "HCA ELEC — Home Connect Algérie",
     // Chaque page ne définit que son titre : "Catalogue" → "Catalogue — HCA ELEC"
@@ -101,6 +103,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col overflow-x-clip font-sans text-ink">
         <Providers>
           {/* Navbar et Footer communs à toutes les pages. */}
+          <InactiveBanner />
           <Navbar />
           <div className="flex-1 background">{children}</div>
           <Footer />
