@@ -13,5 +13,5 @@ export const SITE = {
   whatsappHref: "https://wa.me/213555032216",
   address: "Tixeraine, birkhadem, Alger",
   // URL publique du site (aperçus de liens WhatsApp/Facebook, SEO). À vérifier avant la mise en ligne.
-  url: "https://hca-elec.com",
+  url: "https://hca-elec.vercel.app",
 } as const;
